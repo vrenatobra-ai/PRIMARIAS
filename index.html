@@ -158,6 +158,90 @@ background:#edf8ee;
 font-weight:bold;
 }
 
+.candidato-card{
+background:white;
+border-radius:10px;
+padding:20px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.12);
+border-left:6px solid #ddd;
+}
+
+.candidato-card.lo{
+border-left-color:#003D7A;
+}
+
+.candidato-card.frenova{
+border-left-color:#5FC066;
+}
+
+.candidato-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.candidato-nombre{
+font-size:22px;
+font-weight:bold;
+color:#222;
+}
+
+.candidato-pacto{
+font-size:13px;
+color:#666;
+background:#f0f0f0;
+padding:4px 10px;
+border-radius:15px;
+}
+
+.candidato-stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:15px;
+margin-bottom:15px;
+}
+
+.stat{
+text-align:center;
+padding:10px;
+background:#f9f9f9;
+border-radius:8px;
+}
+
+.stat-label{
+font-size:12px;
+color:#666;
+margin-bottom:5px;
+}
+
+.stat-value{
+font-size:20px;
+font-weight:bold;
+color:#0054A6;
+}
+
+.candidato-progreso{
+background:#ddd;
+height:20px;
+border-radius:10px;
+overflow:hidden;
+}
+
+.candidato-progreso div{
+height:20px;
+transition:1s;
+}
+
+.lo-barra{
+background:#003D7A;
+}
+
+.frenova-barra{
+background:#5FC066;
+}
+
 footer{
 text-align:center;
 padding:25px;
@@ -173,6 +257,10 @@ font-size:24px;
 }
 table{
 font-size:14px;
+}
+.candidato-header{
+flex-direction:column;
+align-items:flex-start;
 }
 }
 
@@ -231,6 +319,55 @@ font-size:14px;
   </div>
 
   <div class="panel">
+    <h2>Candidatos</h2>
+    
+    <div class="candidato-card lo">
+      <div class="candidato-header">
+        <div>
+          <div class="candidato-nombre">Alejandro Magno</div>
+          <div class="candidato-pacto">L.O</div>
+        </div>
+      </div>
+      <div class="candidato-stats">
+        <div class="stat">
+          <div class="stat-label">Votos</div>
+          <div class="stat-value" id="votos-magno">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Porcentaje</div>
+          <div class="stat-value" id="porcentaje-magno">0%</div>
+        </div>
+      </div>
+      <div class="candidato-progreso">
+        <div class="lo-barra" id="barra-magno" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="candidato-card frenova">
+      <div class="candidato-header">
+        <div>
+          <div class="candidato-nombre">Abelardo de la Espriella</div>
+          <div class="candidato-pacto">FRENOVA</div>
+        </div>
+      </div>
+      <div class="candidato-stats">
+        <div class="stat">
+          <div class="stat-label">Votos</div>
+          <div class="stat-value" id="votos-espriella">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Porcentaje</div>
+          <div class="stat-value" id="porcentaje-espriella">0%</div>
+        </div>
+      </div>
+      <div class="candidato-progreso">
+        <div class="frenova-barra" id="barra-espriella" style="width:0%"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel">
     <h2>Resultados por candidatura</h2>
     <table>
       <thead>
@@ -277,16 +414,100 @@ font-size:14px;
 
 const datos={
 
-  participacion: 50%,
+  participacion: "50%",
 
-  electores:1,
+  electores: 1000000,
 
-  votantes:25000000,
+  votantes: 500000,
 
   mesas:{
-    escrutadas:38250,
-    totales:38500
+    escrutadas: 38250,
+    totales: 38500
   },
 
   votos:{
-    validos:12890000,*
+    validos: 480000,
+    nulos: 12000,
+    blancos: 8000
+  },
+
+  candidatos:[
+    {
+      nombre: "Alejandro Magno",
+      pacto: "L.O",
+      votos: 250000,
+      color: "#003D7A"
+    },
+    {
+      nombre: "Abelardo de la Espriella",
+      pacto: "FRENOVA",
+      votos: 230000,
+      color: "#5FC066"
+    }
+  ]
+
+};
+
+//==================================
+// FUNCIONES
+//==================================
+
+function formatearNumero(num) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function actualizarDatos() {
+  // Datos generales
+  document.getElementById("participacion").textContent = datos.participacion;
+  document.getElementById("electores").textContent = formatearNumero(datos.electores);
+  document.getElementById("votantes").textContent = formatearNumero(datos.votantes);
+  document.getElementById("mesas").textContent = datos.mesas.escrutadas + " / " + datos.mesas.totales;
+
+  // Porcentaje superior
+  let porcentajeEscrutinio = (datos.mesas.escrutadas / datos.mesas.totales * 100).toFixed(2);
+  document.getElementById("porcentajeSuperior").textContent = porcentajeEscrutinio + "%";
+
+  // Barra de progreso de mesas
+  document.getElementById("barraMesas").style.width = porcentajeEscrutinio + "%";
+  document.getElementById("textoMesas").textContent = datos.mesas.escrutadas + " de " + datos.mesas.totales + " mesas escrutadas";
+
+  // Candidatos
+  let totalVotos = datos.candidatos.reduce((sum, c) => sum + c.votos, 0);
+
+  datos.candidatos.forEach(candidato => {
+    let porcentaje = (candidato.votos / totalVotos * 100).toFixed(2);
+    let idSanitizado = candidato.nombre.toLowerCase().replace(/\s+/g, "-");
+
+    // Actualizar votos
+    let elementoVotos = document.getElementById("votos-" + (candidato.pacto === "L.O" ? "magno" : "espriella"));
+    if(elementoVotos) {
+      elementoVotos.textContent = formatearNumero(candidato.votos);
+    }
+
+    // Actualizar porcentaje
+    let elementoPorcentaje = document.getElementById("porcentaje-" + (candidato.pacto === "L.O" ? "magno" : "espriella"));
+    if(elementoPorcentaje) {
+      elementoPorcentaje.textContent = porcentaje + "%";
+    }
+
+    // Actualizar barra
+    let elementoBarra = document.getElementById("barra-" + (candidato.pacto === "L.O" ? "magno" : "espriella"));
+    if(elementoBarra) {
+      elementoBarra.style.width = porcentaje + "%";
+    }
+  });
+
+  // Otros votos
+  document.getElementById("validos").textContent = formatearNumero(datos.votos.validos);
+  document.getElementById("nulos").textContent = formatearNumero(datos.votos.nulos);
+  document.getElementById("blancos").textContent = formatearNumero(datos.votos.blancos);
+}
+
+// Ejecutar al cargar
+actualizarDatos();
+
+</script>
+
+</body>
+
+</html>
