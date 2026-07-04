@@ -98,31 +98,36 @@ th,td{
 // EDITA TODO AQUÍ
 //==========================
 
-const datos={
-participacion:"82,35%",
-mesas:"18.450 / 18.600 (99,19%)",
-validos:5423156,
-nulos:83241,
-blancos:15201,
+const datos = {
+  participacion: 83.24,
+  electores: 15_843_210,
+  votantes: 13_185_432,
 
-candidatos:[
+  mesas: {
+    escrutadas: 38_250,
+    totales: 38_500
+  },
 
-{
-nombre:"Renato Bravo",
-partido:"PNL",
-votos:2815000,
-color:"#0066cc"
-},
+  votos: {
+    validos: 12_950_000,
+    nulos: 180_450,
+    blancos: 54_982
+  },
 
-{
-nombre:"Juan Pérez",
-partido:"PDC",
-votos:2608156,
-color:"#cc3333"
-}
-
-]
-
+  candidatos: [
+    {
+      nombre: "Renato Bravo",
+      partido: "PNL",
+      color: "#005BAC",
+      votos: 6_821_350
+    },
+    {
+      nombre: "Juan Pérez",
+      partido: "PDC",
+      color: "#D52B1E",
+      votos: 6_128_650
+    }
+  ]
 };
 
 //==========================
