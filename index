@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resultados Electorales</title>
+
+<style>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f5f7;
+    margin:0;
+}
+
+header{
+    background:#0056a6;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.panel{
+    width:900px;
+    margin:20px auto;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    padding:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#0056a6;
+    color:white;
+}
+
+th,td{
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+.barra{
+    width:100%;
+    background:#ddd;
+    height:18px;
+    border-radius:10px;
+}
+
+.relleno{
+    height:18px;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Resultados Electorales</h1>
+</header>
+
+<div class="panel">
+
+<h2>Datos generales</h2>
+
+<p><b>Participación:</b> <span id="participacion"></span></p>
+<p><b>Mesas escrutadas:</b> <span id="mesas"></span></p>
+<p><b>Votos válidos:</b> <span id="validos"></span></p>
+<p><b>Votos nulos:</b> <span id="nulos"></span></p>
+<p><b>Votos blancos:</b> <span id="blancos"></span></p>
+
+<h2>Candidatos</h2>
+
+<table>
+<thead>
+<tr>
+<th>Candidato</th>
+<th>Partido</th>
+<th>Votos</th>
+<th>%</th>
+<th>Gráfico</th>
+</tr>
+</thead>
+
+<tbody id="tabla"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+//==========================
+// EDITA TODO AQUÍ
+//==========================
+
+const datos={
+participacion:"82,35%",
+mesas:"18.450 / 18.600 (99,19%)",
+validos:5423156,
+nulos:83241,
+blancos:15201,
+
+candidatos:[
+
+{
+nombre:"Renato Bravo",
+partido:"PNL",
+votos:2815000,
+color:"#0066cc"
+},
+
+{
+nombre:"Juan Pérez",
+partido:"PDC",
+votos:2608156,
+color:"#cc3333"
+}
+
+]
+
+};
+
+//==========================
+
+document.getElementById("participacion").textContent=datos.participacion;
+document.getElementById("mesas").textContent=datos.mesas;
+document.getElementById("validos").textContent=datos.validos.toLocaleString("es-CL");
+document.getElementById("nulos").textContent=datos.nulos.toLocaleString("es-CL");
+document.getElementById("blancos").textContent=datos.blancos.toLocaleString("es-CL");
+
+let total=0;
+
+datos.candidatos.forEach(c=>total+=c.votos);
+
+let html="";
+
+datos.candidatos.forEach(c=>{
+
+let p=(c.votos/total*100).toFixed(2);
+
+html+=`
+<tr>
+
+<td>${c.nombre}</td>
+
+<td>${c.partido}</td>
+
+<td>${c.votos.toLocaleString("es-CL")}</td>
+
+<td>${p}%</td>
+
+<td>
+
+<div class="barra">
+<div class="relleno" style="width:${p}%;background:${c.color};"></div>
+</div>
+
+</td>
+
+</tr>
+`;
+
+});
+
+document.getElementById("tabla").innerHTML=html;
+
+</script>
+
+</body>
+</html>
