@@ -1,173 +1,465 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Resultados Electorales</title>
 
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
 body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f3f5f7;
-    margin:0;
+background:#eef2f6;
+color:#222;
 }
 
 header{
-    background:#0056a6;
-    color:white;
-    padding:20px;
-    text-align:center;
+
+background:#0054A6;
+color:white;
+padding:25px;
+
+box-shadow:0 3px 8px rgba(0,0,0,.2);
+
+}
+
+header h1{
+
+font-size:34px;
+
+}
+
+header p{
+
+margin-top:8px;
+opacity:.9;
+
+}
+
+.contenedor{
+
+width:95%;
+max-width:1300px;
+margin:auto;
+padding:20px;
+
+}
+
+.tarjetas{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+
+margin-bottom:20px;
+
+}
+
+.tarjeta{
+
+background:white;
+border-radius:10px;
+padding:18px;
+box-shadow:0 2px 8px rgba(0,0,0,.12);
+
+}
+
+.tarjeta h3{
+
+font-size:15px;
+color:#666;
+
+}
+
+.valor{
+
+font-size:30px;
+font-weight:bold;
+margin-top:10px;
+
 }
 
 .panel{
-    width:900px;
-    margin:20px auto;
-    background:white;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
-    padding:20px;
+
+background:white;
+border-radius:10px;
+padding:20px;
+margin-top:20px;
+box-shadow:0 2px 8px rgba(0,0,0,.12);
+
+}
+
+.panel h2{
+
+margin-bottom:20px;
+color:#0054A6;
+
+}
+
+.progreso{
+
+background:#ddd;
+height:24px;
+border-radius:50px;
+overflow:hidden;
+
+margin-top:10px;
+
+}
+
+.progreso div{
+
+height:24px;
+background:#0054A6;
+width:0%;
+
+transition:1s;
+
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
+
+width:100%;
+border-collapse:collapse;
+
 }
 
 th{
-    background:#0056a6;
-    color:white;
+
+background:#0054A6;
+color:white;
+
+padding:12px;
+
 }
 
-th,td{
-    padding:10px;
-    border:1px solid #ddd;
-    text-align:center;
+td{
+
+padding:12px;
+border-bottom:1px solid #ddd;
+
+}
+
+tbody tr:hover{
+
+background:#f5f7fa;
+
 }
 
 .barra{
-    width:100%;
-    background:#ddd;
-    height:18px;
-    border-radius:10px;
+
+background:#ddd;
+height:18px;
+border-radius:20px;
+overflow:hidden;
+
 }
 
 .relleno{
-    height:18px;
-    border-radius:10px;
+
+height:18px;
+
 }
+
+.ganador{
+
+background:#edf8ee;
+
+font-weight:bold;
+
+}
+
+footer{
+
+text-align:center;
+padding:25px;
+color:#666;
+
+}
+
+@media(max-width:700px){
+
+header h1{
+
+font-size:26px;
+
+}
+
+.valor{
+
+font-size:24px;
+
+}
+
+table{
+
+font-size:14px;
+
+}
+
+}
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-<h1>Resultados Electorales</h1>
+
+<h1>RESULTADOS ELECTORALES</h1>
+
+<p>Portal de Resultados</p>
+
 </header>
+
+<div class="contenedor">
+
+<div class="tarjetas">
+
+<div class="tarjeta">
+
+<h3>Participación</h3>
+
+<div class="valor" id="participacion"></div>
+
+</div>
+
+<div class="tarjeta">
+
+<h3>Electores</h3>
+
+<div class="valor" id="electores"></div>
+
+</div>
+
+<div class="tarjeta">
+
+<h3>Votantes</h3>
+
+<div class="valor" id="votantes"></div>
+
+</div>
+
+<div class="tarjeta">
+
+<h3>Mesas escrutadas</h3>
+
+<div class="valor" id="mesas"></div>
+
+</div>
+
+</div>
 
 <div class="panel">
 
-<h2>Datos generales</h2>
+<h2>Avance del escrutinio</h2>
 
-<p><b>Participación:</b> <span id="participacion"></span></p>
-<p><b>Mesas escrutadas:</b> <span id="mesas"></span></p>
-<p><b>Votos válidos:</b> <span id="validos"></span></p>
-<p><b>Votos nulos:</b> <span id="nulos"></span></p>
-<p><b>Votos blancos:</b> <span id="blancos"></span></p>
+<div class="progreso">
 
-<h2>Candidatos</h2>
+<div id="barraMesas"></div>
+
+</div>
+
+<p id="textoMesas" style="margin-top:10px;"></p>
+
+</div>
+
+<div class="panel">
+
+<h2>Resultados por candidatura</h2>
 
 <table>
+
 <thead>
+
 <tr>
+
 <th>Candidato</th>
-<th>Partido</th>
+
+<th>Pacto</th>
+
 <th>Votos</th>
+
 <th>%</th>
-<th>Gráfico</th>
+
+<th>Resultado</th>
+
 </tr>
+
 </thead>
 
-<tbody id="tabla"></tbody>
+<tbody id="tabla">
+
+</tbody>
 
 </table>
 
 </div>
 
+<div class="panel">
+
+<h2>Otros votos</h2>
+
+<table>
+
+<tr>
+
+<td>Válidamente emitidos</td>
+
+<td id="validos"></td>
+
+</tr>
+
+<tr>
+
+<td>Nulos</td>
+
+<td id="nulos"></td>
+
+</tr>
+
+<tr>
+
+<td>Blancos</td>
+
+<td id="blancos"></td>
+
+</tr>
+
+</table>
+
+</div>
+
+<footer>
+
+Actualización automática
+
+</footer>
 <script>
 
-//==========================
-// EDITA TODO AQUÍ
-//==========================
+//==================================
+// EDITA TODO SOLO AQUÍ
+//==================================
 
-const datos = {
-  participacion: 83.24,
-  electores: 15_843_210,
-  votantes: 13_185_432,
+const datos={
 
-  mesas: {
-    escrutadas: 38_250,
-    totales: 38_500
-  },
+participacion:82.45,
 
-  votos: {
-    validos: 12_950_000,
-    nulos: 180_450,
-    blancos: 54_982
-  },
+electores:15843210,
 
-  candidatos: [
-    {
-      nombre: "Renato Bravo",
-      partido: "PNL",
-      color: "#005BAC",
-      votos: 6_821_350
-    },
-    {
-      nombre: "Juan Pérez",
-      partido: "PDC",
-      color: "#D52B1E",
-      votos: 6_128_650
-    }
-  ]
+votantes:13065421,
+
+mesas:{
+escrutadas:38250,
+totales:38500
+},
+
+votos:{
+validos:12890000,
+nulos:125432,
+blancos:49989
+},
+
+actualizacion:"03/07/2026 21:35",
+
+candidatos:[
+
+{
+nombre:"Renato Bravo",
+pacto:"PNL",
+color:"#005BAC",
+votos:6821350
+},
+
+{
+nombre:"Juan Pérez",
+pacto:"PDC",
+color:"#D52B1E",
+votos:6068650
+}
+
+]
+
 };
 
-//==========================
+//==================================
+// NO MODIFICAR DESDE AQUÍ
+//==================================
 
-document.getElementById("participacion").textContent=datos.participacion;
-document.getElementById("mesas").textContent=datos.mesas;
-document.getElementById("validos").textContent=datos.validos.toLocaleString("es-CL");
-document.getElementById("nulos").textContent=datos.nulos.toLocaleString("es-CL");
-document.getElementById("blancos").textContent=datos.blancos.toLocaleString("es-CL");
+const f=n=>Number(n).toLocaleString("es-CL");
+
+document.getElementById("participacion").textContent=datos.participacion.toFixed(2).replace(".",",")+"%";
+
+document.getElementById("electores").textContent=f(datos.electores);
+
+document.getElementById("votantes").textContent=f(datos.votantes);
+
+document.getElementById("mesas").textContent=
+f(datos.mesas.escrutadas)+" / "+f(datos.mesas.totales);
+
+document.getElementById("validos").textContent=f(datos.votos.validos);
+
+document.getElementById("nulos").textContent=f(datos.votos.nulos);
+
+document.getElementById("blancos").textContent=f(datos.votos.blancos);
+
+let porcentajeMesas=(datos.mesas.escrutadas/datos.mesas.totales)*100;
+
+document.getElementById("barraMesas").style.width=porcentajeMesas+"%";
+
+document.getElementById("textoMesas").textContent=
+porcentajeMesas.toFixed(2).replace(".",",")+"% de mesas escrutadas";
 
 let total=0;
 
 datos.candidatos.forEach(c=>total+=c.votos);
 
+let ganador=Math.max(...datos.candidatos.map(c=>c.votos));
+
 let html="";
 
 datos.candidatos.forEach(c=>{
 
-let p=(c.votos/total*100).toFixed(2);
+let porcentaje=(c.votos/total*100);
 
 html+=`
-<tr>
+
+<tr class="${c.votos==ganador?'ganador':''}">
 
 <td>${c.nombre}</td>
 
-<td>${c.partido}</td>
+<td>${c.pacto}</td>
 
-<td>${c.votos.toLocaleString("es-CL")}</td>
+<td>${f(c.votos)}</td>
 
-<td>${p}%</td>
+<td>${porcentaje.toFixed(2).replace(".",",")}%</td>
 
 <td>
 
 <div class="barra">
-<div class="relleno" style="width:${p}%;background:${c.color};"></div>
+
+<div class="relleno"
+
+style="width:${porcentaje}%;background:${c.color};">
+
+</div>
+
 </div>
 
 </td>
 
 </tr>
+
 `;
 
 });
@@ -175,6 +467,135 @@ html+=`
 document.getElementById("tabla").innerHTML=html;
 
 </script>
+<script>
+
+//==============================
+// PANEL DE RESUMEN
+//==============================
+
+const ordenados=[...datos.candidatos].sort((a,b)=>b.votos-a.votos);
+
+const primero=ordenados[0];
+const segundo=ordenados[1];
+
+const diferencia=primero.votos-segundo.votos;
+
+const porcentajePrimero=((primero.votos/total)*100).toFixed(2).replace(".",",");
+
+const porcentajeSegundo=((segundo.votos/total)*100).toFixed(2).replace(".",",");
+
+const resumen=document.createElement("div");
+
+resumen.className="panel";
+
+resumen.innerHTML=`
+
+<h2>Resumen de la elección</h2>
+
+<div style="display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:15px;">
+
+<div class="tarjeta">
+
+<h3>Candidato más votado</h3>
+
+<div class="valor" style="font-size:24px;color:#0054A6;">
+🥇 ${primero.nombre}
+</div>
+
+<p style="margin-top:10px;">
+${porcentajePrimero}%<br>
+${f(primero.votos)} votos
+</p>
+
+</div>
+
+<div class="tarjeta">
+
+<h3>Segundo lugar</h3>
+
+<div class="valor" style="font-size:24px;">
+🥈 ${segundo.nombre}
+</div>
+
+<p style="margin-top:10px;">
+${porcentajeSegundo}%<br>
+${f(segundo.votos)} votos
+</p>
+
+</div>
+
+<div class="tarjeta">
+
+<h3>Diferencia</h3>
+
+<div class="valor">
+
+${f(diferencia)}
+
+</div>
+
+<p>votos</p>
+
+</div>
+
+</div>
+
+`;
+
+document.querySelector(".contenedor").insertBefore(
+resumen,
+document.querySelectorAll(".panel")[0]
+);
+
+//==============================
+// PIE DE PÁGINA
+//==============================
+
+document.querySelector("footer").innerHTML=`
+
+<b>Actualización:</b> ${datos.actualizacion}
+<br><br>
+
+Mesas escrutadas:
+<b>${f(datos.mesas.escrutadas)}</b> de
+<b>${f(datos.mesas.totales)}</b>
+
+`;
+
+</script>
 
 </body>
+
 </html>
+<header>
+
+<div style="max-width:1300px;margin:auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+
+<div>
+
+<h1 style="font-size:34px;">RESULTADOS PRELIMINARES</h1>
+
+<p style="margin-top:8px;">
+Elección Primaria
+</p>
+
+</div>
+
+<div style="text-align:right;">
+
+<div style="font-size:14px;">
+Mesas escrutadas
+</div>
+
+<div id="porcentajeSuperior"
+style="font-size:42px;font-weight:bold;">
+
+</div>
+
+</div>
+
+</div>
+
+</header>
